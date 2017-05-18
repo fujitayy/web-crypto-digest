@@ -61,7 +61,7 @@
                                 }
                                 log("Hashed data: " + hashString);
                                 log("Expected hash: " + expected_sha256);
-                                log("Hashed and Expected are " + (hashString == expected ? "match!" : "not match"));
+                                log("Hashed and Expected are " + (hashString == expected_sha256 ? "match!" : "not match"));
                             })
                             .catch(function(error) {
                                 log("Error occured: " + error);
