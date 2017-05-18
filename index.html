@@ -49,7 +49,7 @@
                             array[i] = data.charCodeAt(i); // Expected ASCII character only.
                         }
 
-                        subtle.digest('SHA-1', array)
+                        subtle.digest({ name: "SHA-1" }, array)
                             .then(function(hashArray) {
                                 var hashByteArray = new Uint8Array(hashArray);
                                 var hashString = "";
