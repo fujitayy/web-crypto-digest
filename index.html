@@ -42,6 +42,7 @@
 
                         var data = "http://www.example.com/endpoint?var=uuuu___-----&aaa";
                         var expected = "6350feef0bec6fed9fe6f9f7c2cee52144c5cfcb";
+                        var expected_sha256 = "5e6220bfeef829c9bd88b5cb5c682f2ea144e40dba1c4850b5361979a5bc389a";
                         log("Original data: " + data);
 
                         var array = new Uint8Array(data.length);
@@ -49,7 +50,7 @@
                             array[i] = data.charCodeAt(i); // Expected ASCII character only.
                         }
 
-                        subtle.digest({ name: "SHA-1" }, array)
+                        subtle.digest({ name: "SHA-256" }, array)
                             .then(function(hashArray) {
                                 var hashByteArray = new Uint8Array(hashArray);
                                 var hashString = "";
@@ -59,7 +60,7 @@
                                     hashString += hex;
                                 }
                                 log("Hashed data: " + hashString);
-                                log("Expected hash: " + expected);
+                                log("Expected hash: " + expected_sha256);
                                 log("Hashed and Expected are " + (hashString == expected ? "match!" : "not match"));
                             })
                             .catch(function(error) {
