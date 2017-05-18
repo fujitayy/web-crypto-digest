@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>Web Cryptography Test</title>
+    </head>
+    <body>
+        <div id="log"></div>
+        <script>
+            (function() {
+                function log(t) {
+                    var text = document.createTextNode(t);
+                    var line = document.createElement('div');
+                    line.appendChild(text);
+                    document.querySelector('#log').appendChild(line);
+                }
+
+                log(window.navigator.userAgent);
+
+                var crypto = null;
+                var subtle = null;
+                var availableCryptoObjectName = [];
+                if (window.msCrypto) {
+                    crypto = window.msCrypto;
+                    log("window.msCrypto is implementd");
+                }
+                if (window.crypto) {
+                    crypto = window.crypto;
+                    log("window.crypto is implementd");
+                }
+                if (crypto && crypto.subtle) {
+                    subtle = crypto.subtle;
+                    log("window.crypto.subtle is implemented");
+                }
+                if (crypto && crypto.webkitSubtle) {
+                    subtle = crypto.webkitSubtle;
+                    log("window.cyrpto.webkitSubtle is implemented");
+                }
+
+                if (subtle) {
+                    if (subtle.digest) {
+                        log("subtle.digest is implemented");
+
+                        var data = "http://www.example.com/endpoint?var=uuuu___-----&aaa";
+                        var expected = "6350feef0bec6fed9fe6f9f7c2cee52144c5cfcb";
+                        log("Original data: " + data);
+
+                        var array = new Uint8Array(data.length);
+                        for (var i = 0; i < data.length; i++) {
+                            array[i] = data.charCodeAt(i); // Expected ASCII character only.
+                        }
+
+                        subtle.digest({name: 'SHA-1'}, array)
+                            .then(function(hashArray) {
+                                var hashByteArray = new Uint8Array(hashArray);
+                                var hashString = "";
+                                for (var i = 0; i < hashByteArray.length; i++) {
+                                    var hex = hashByteArray[i].toString(16);
+                                    hex = hex.length != 1 ? hex : '0' + hex;
+                                    hashString += hex;
+                                }
+                                log("Hashed data: " + hashString);
+                                log("Expected hash: " + expected);
+                                log("Hashed and Expected are " + (hashString == expected ? "match!" : "not match"));
+                            })
+                            .catch(function(error) {
+                                log("Error occured: " + error);
+                            });
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>
